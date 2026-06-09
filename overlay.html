@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<style>
+
+body{
+margin:0;
+background:transparent;
+font-family:Arial;
+}
+
+#scoreboard{
+width:100%;
+height:120px;
+background:#111;
+color:white;
+
+display:flex;
+justify-content:space-around;
+align-items:center;
+
+font-size:40px;
+font-weight:bold;
+}
+
+.minute{
+font-size:25px;
+color:yellow;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="scoreboard">
+
+<div id="home"></div>
+
+<div id="score"></div>
+
+<div id="away"></div>
+
+<div id="minute"></div>
+
+</div>
+
+<script>
+
+async function loadData(){
+
+const response =
+await fetch(
+'https://script.google.com/macros/s/AKfycbz3R296xLnvQBY8VcjwuYJlpJWC8Aw8HL3G_0G1kH18/dev'
+);
+
+const data =
+await response.json();
+
+document.getElementById("home").innerHTML =
+data.homeTeam;
+
+document.getElementById("away").innerHTML =
+data.awayTeam;
+
+document.getElementById("score").innerHTML =
+data.homeScore + " - " + data.awayScore;
+
+document.getElementById("minute").innerHTML =
+data.minute + "'";
+
+}
+
+setInterval(loadData,3000);
+
+loadData();
+
+</script>
+
+</body>
+</html>
