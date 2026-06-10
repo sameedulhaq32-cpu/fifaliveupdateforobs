@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-
 <html>
 <head>
 <meta charset="UTF-8">
-<title>FIFA Live Overlay</title>
+<title>API Debug Overlay</title>
 
 <style>
 
@@ -15,52 +14,17 @@ body{
     padding:20px;
 }
 
-#container{
-    max-width:1200px;
-    margin:auto;
-}
-
-#scoreboard{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:40px;
-    font-size:60px;
-    font-weight:bold;
-}
-
-#minute{
-    text-align:center;
-    color:yellow;
-    font-size:32px;
-    margin-top:15px;
-    margin-bottom:30px;
-}
-
-#eventsPanel{
-    border:1px solid #444;
-    border-radius:10px;
-    padding:20px;
-    background:#1a1a1a;
-}
-
-#eventsPanel h2{
-    margin-top:0;
+h1{
     color:#ffd700;
 }
 
-.event{
-    padding:10px 0;
-    border-bottom:1px solid #333;
-    font-size:22px;
-}
-
-.event:last-child{
-    border-bottom:none;
-}
-
-.loading{
-    color:#999;
+pre{
+    background:#222;
+    border:1px solid #444;
+    padding:20px;
+    border-radius:8px;
+    white-space:pre-wrap;
+    word-wrap:break-word;
 }
 
 </style>
@@ -69,102 +33,42 @@ body{
 
 <body>
 
-<div id="container">
+<h1>API Debug Output</h1>
 
-```
-<div id="scoreboard">
-
-    <div id="home">Loading...</div>
-
-    <div id="score">0 - 0</div>
-
-    <div id="away">Loading...</div>
-
-</div>
-
-<div id="minute">0'</div>
-
-<div id="eventsPanel">
-
-    <h2>Live Events</h2>
-
-    <div id="eventList" class="loading">
-        Waiting for events...
-    </div>
-
-</div>
-```
-
-</div>
+<pre id="output">Loading...</pre>
 
 <script>
 
 const api =
-"https://script.google.com/macros/s/AKfycbx2r3-vOT27XKSLOM7JAEJ05fc2YgpTsO5MFqgu0CZluR0a_dkrHxp7VtK5aGlBc2bQdw/exec";
+"https://script.google.com/macros/s/AKfycbyLDs1NNAOLTtNh68pIcV7KKXoKMOrEPdf3nhxykr5UQkDPsphCevRdq90QODz-JdNwUQ/exec";
 
 async function loadData(){
 
     try{
 
         const response = await fetch(api);
+
         const data = await response.json();
-console.log("FULL DATA");
-console.log(data);
-        document.getElementById("home").innerText =
-            data.scoreboard.homeTeam;
 
-        document.getElementById("away").innerText =
-            data.scoreboard.awayTeam;
+        console.log("FULL API RESPONSE:");
+        console.log(data);
 
-        document.getElementById("score").innerText =
-            data.scoreboard.homeScore +
-            " - " +
-            data.scoreboard.awayScore;
-
-        document.getElementById("minute").innerText =
-            data.scoreboard.minute + "'";
-
-        let html = "";
-
-        if(data.events && data.events.length > 0){
-
-            for(let i = 0; i < data.events.length; i++){
-
-                html +=
-                "<div class='event'>" +
-                "<strong>" +
-                data.events[i][0] +
-                "'</strong> - " +
-                data.events[i][1] +
-                "</div>";
-
-            }
-
-        }else{
-
-            html =
-            "<div class='event'>No events available</div>";
-
-        }
-
-        document.getElementById("eventList").innerHTML =
-            html;
+        document.getElementById("output").textContent =
+            JSON.stringify(data, null, 2);
 
     }
     catch(error){
 
-        console.log(error);
+        console.error(error);
 
-        document.getElementById("eventList").innerHTML =
-            "<div class='event'>Failed to load data</div>";
+        document.getElementById("output").textContent =
+            "ERROR:\n\n" + error;
 
     }
 
 }
 
 loadData();
-
-setInterval(loadData,5000);
 
 </script>
 
