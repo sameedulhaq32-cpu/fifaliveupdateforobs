@@ -2,89 +2,130 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<title>Live Football Overlay</title>
 
 <style>
 
 body{
     background:#111;
     color:white;
-    font-family:Arial;
+    font-family:Arial, sans-serif;
     margin:0;
     padding:20px;
 }
 
-#board{
+#scoreboard{
     display:flex;
     justify-content:center;
     align-items:center;
     gap:40px;
-    font-size:60px;
+    font-size:50px;
     font-weight:bold;
 }
 
 #minute{
     text-align:center;
-    margin-top:20px;
-    font-size:30px;
     color:yellow;
+    font-size:28px;
+    margin-top:10px;
+}
+
+#events{
+    margin-top:30px;
+    border:1px solid #444;
+    padding:20px;
+    border-radius:10px;
+}
+
+.event{
+    margin:8px 0;
+    font-size:22px;
+}
+
+h2{
+    margin-top:0;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<div id="board">
+<div id="scoreboard">
 
-<div id="home">Loading...</div>
+    <div id="home">Loading...</div>
 
-<div id="score">0 - 0</div>
+    <div id="score">0 - 0</div>
 
-<div id="away">Loading...</div>
+    <div id="away">Loading...</div>
 
 </div>
 
 <div id="minute">0'</div>
 
+<div id="events">
+
+    <h2>Live Events</h2>
+
+    <div id="eventList"></div>
+
+</div>
+
 <script>
 
-const api =
-"https://script.google.com/macros/s/AKfycbyLDs1NNAOLTtNh68pIcV7KKXoKMOrEPdf3nhxykr5UQkDPsphCevRdq90QODz-JdNwUQ/exec";
+// REPLACE THIS WITH YOUR APPS SCRIPT URL
+const api = "https://script.google.com/macros/s/AKfycbx2r3-vOT27XKSLOM7JAEJ05fc2YgpTsO5MFqgu0CZluR0a_dkrHxp7VtK5aGlBc2bQdw/exec";
 
-async function updateScore(){
+async function loadData() {
 
-try{
+    try {
 
-const response = await fetch(api);
+        const response = await fetch(api);
+        const data = await response.json();
 
-const data = await response.json();
+        document.getElementById("home").innerText =
+            data.scoreboard.homeTeam;
 
-console.log(data);
+        document.getElementById("away").innerText =
+            data.scoreboard.awayTeam;
 
-document.getElementById("home").innerText =
-data.homeTeam;
+        document.getElementById("score").innerText =
+            data.scoreboard.homeScore +
+            " - " +
+            data.scoreboard.awayScore;
 
-document.getElementById("away").innerText =
-data.awayTeam;
+        document.getElementById("minute").innerText =
+            data.scoreboard.minute + "'";
 
-document.getElementById("score").innerText =
-data.homeScore + " - " + data.awayScore;
+        let eventsHtml = "";
 
-document.getElementById("minute").innerText =
-data.minute + "'";
+        data.events.forEach(function(event){
+
+            eventsHtml +=
+                "<div class='event'>" +
+                event[0] +
+                "' - " +
+                event[1] +
+                "</div>";
+
+        });
+
+        document.getElementById("eventList").innerHTML =
+            eventsHtml;
+
+    }
+    catch(error){
+
+        console.log(error);
+
+    }
 
 }
-catch(err){
 
-console.log(err);
+loadData();
 
-}
-
-}
-
-updateScore();
-
-setInterval(updateScore,5000);
+setInterval(loadData, 3000);
 
 </script>
 
