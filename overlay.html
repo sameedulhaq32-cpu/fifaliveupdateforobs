@@ -19,17 +19,19 @@ body{
     overflow:hidden;
 }
 
-/* SCOREBOARD */
+/* TOP BAR */
 
 #topBar{
 
-    width:100%;
-    height:100px;
+    height:90px;
 
     display:flex;
+
     justify-content:center;
+
     align-items:center;
-    gap:40px;
+
+    gap:30px;
 
     border-bottom:2px solid #222;
 
@@ -38,40 +40,46 @@ body{
 }
 
 .team{
-    font-size:52px;
+
+    font-size:48px;
+
     font-weight:bold;
+
 }
 
 .score{
-    font-size:72px;
+
+    font-size:64px;
+
     font-weight:bold;
+
     color:#ffffff;
+
 }
 
 #minute{
 
-    font-size:34px;
     color:#ffd700;
 
-    margin-left:30px;
+    font-size:32px;
 
 }
 
-/* MAIN AREA */
+/* MAIN */
 
 #main{
 
-    height:calc(100vh - 150px);
+    height:calc(100vh - 140px);
 
     display:grid;
 
-    grid-template-columns:45% 55%;
+    grid-template-columns:50% 50%;
 
-    grid-template-rows:50% 50%;
+    grid-template-rows:55% 45%;
 
-    gap:15px;
+    gap:10px;
 
-    padding:15px;
+    padding:10px;
 
 }
 
@@ -79,7 +87,7 @@ body{
 
 .panel{
 
-    background:#111;
+    background:#101010;
 
     border:1px solid #2a2a2a;
 
@@ -97,7 +105,7 @@ body{
 
     padding:15px;
 
-    font-size:30px;
+    font-size:28px;
 
     font-weight:bold;
 
@@ -105,11 +113,11 @@ body{
 
 .panelBody{
 
-    height:calc(100% - 65px);
+    height:calc(100% - 60px);
 
     overflow-y:auto;
 
-    padding:15px;
+    padding:10px;
 
 }
 
@@ -121,11 +129,11 @@ body{
 
     border-bottom:1px solid #222;
 
-    font-size:24px;
+    font-size:22px;
 
 }
 
-/* STANDINGS */
+/* TABLE */
 
 table{
 
@@ -141,21 +149,17 @@ th{
 
     color:#ffd700;
 
-    padding:12px;
-
-    font-size:20px;
+    padding:10px;
 
 }
 
 td{
 
-    padding:12px;
+    padding:10px;
 
     text-align:center;
 
     border-bottom:1px solid #222;
-
-    font-size:20px;
 
 }
 
@@ -163,11 +167,23 @@ td{
 
 .fixture{
 
-    padding:15px;
+    padding:14px;
 
     border-bottom:1px solid #222;
 
-    font-size:22px;
+    font-size:20px;
+
+}
+
+/* STATUS */
+
+#status{
+
+    padding:15px;
+
+    font-size:24px;
+
+    line-height:1.8;
 
 }
 
@@ -183,7 +199,7 @@ td{
 
     width:100%;
 
-    height:50px;
+    height:40px;
 
     background:#111;
 
@@ -199,9 +215,9 @@ td{
 
     white-space:nowrap;
 
-    line-height:50px;
+    line-height:40px;
 
-    font-size:24px;
+    font-size:20px;
 
     animation:tickerMove 25s linear infinite;
 
@@ -216,6 +232,16 @@ td{
     to{
         transform:translateX(-100%);
     }
+
+}
+
+.error{
+
+    color:#ff4444;
+
+    font-size:24px;
+
+    padding:20px;
 
 }
 
@@ -238,8 +264,6 @@ td{
 
 <div id="main">
 
-    <!-- EVENTS -->
-
     <div class="panel">
 
         <div class="panelTitle">
@@ -253,8 +277,6 @@ td{
         </div>
 
     </div>
-
-    <!-- STANDINGS -->
 
     <div class="panel">
 
@@ -270,8 +292,6 @@ td{
 
     </div>
 
-    <!-- FIXTURES -->
-
     <div class="panel">
 
         <div class="panelTitle">
@@ -286,8 +306,6 @@ td{
 
     </div>
 
-    <!-- TOURNAMENT INFO -->
-
     <div class="panel">
 
         <div class="panelTitle">
@@ -296,27 +314,9 @@ td{
 
         <div class="panelBody">
 
-            <div style="font-size:28px;line-height:2">
+            <div id="status">
 
-                <div>
-                    Last Updated:
-                    <span id="updatedTime">--</span>
-                </div>
-
-                <div>
-                    Total Events:
-                    <span id="eventCount">0</span>
-                </div>
-
-                <div>
-                    Teams In Group:
-                    <span id="teamCount">0</span>
-                </div>
-
-                <div>
-                    Upcoming Matches:
-                    <span id="fixtureCount">0</span>
-                </div>
+                Loading...
 
             </div>
 
@@ -357,7 +357,7 @@ function formatDate(dateString){
         );
 
     }
-    catch(err){
+    catch(error){
 
         return dateString;
 
@@ -369,13 +369,12 @@ async function loadData(){
 
     try{
 
-        const response =
-        await fetch(api);
+        const response = await fetch(api);
 
-        const data =
-        await response.json();
+        const data = await response.json();
 
-        /* SCOREBOARD */
+        console.log("API DATA");
+        console.log(data);
 
         document.getElementById("homeTeam").innerText =
         data.scoreboard.homeTeam;
@@ -391,22 +390,15 @@ async function loadData(){
         document.getElementById("minute").innerText =
         data.scoreboard.minute + "'";
 
-        /* EVENTS */
-
         let eventsHTML = "";
 
         for(let i=0;i<data.events.length;i++){
 
             eventsHTML +=
-
-            "<div class='event'>" +
-
-            "<strong>" +
+            "<div class='event'><strong>" +
             data.events[i][0] +
             "'</strong> - " +
-
             data.events[i][1] +
-
             "</div>";
 
         }
@@ -414,18 +406,8 @@ async function loadData(){
         document.getElementById("events").innerHTML =
         eventsHTML;
 
-        /* STANDINGS */
-
         let standingsHTML =
-
-        "<tr>" +
-        "<th>Team</th>" +
-        "<th>P</th>" +
-        "<th>W</th>" +
-        "<th>D</th>" +
-        "<th>L</th>" +
-        "<th>PTS</th>" +
-        "</tr>";
+        "<tr><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>PTS</th></tr>";
 
         for(let s=0;s<data.standings.length;s++){
 
@@ -447,22 +429,15 @@ async function loadData(){
         document.getElementById("standingsTable").innerHTML =
         standingsHTML;
 
-        /* FIXTURES */
-
         let fixturesHTML = "";
 
         for(let f=0;f<data.fixtures.length;f++){
 
             fixturesHTML +=
-
             "<div class='fixture'>" +
-
             formatDate(data.fixtures[f][0]) +
-
             " - " +
-
             data.fixtures[f][1] +
-
             "</div>";
 
         }
@@ -470,29 +445,32 @@ async function loadData(){
         document.getElementById("fixtures").innerHTML =
         fixturesHTML;
 
-        /* TICKER */
-
         document.getElementById("tickerText").innerText =
-        data.ticker.join("   •   ");
+        data.ticker.join("  •  ");
 
-        /* OVERVIEW */
+        document.getElementById("status").innerHTML =
 
-        document.getElementById("updatedTime").innerText =
-        data.lastUpdated;
+        "Last Updated: " +
+        data.lastUpdated +
 
-        document.getElementById("eventCount").innerText =
-        data.events.length;
+        "<br><br>Total Events: " +
+        data.events.length +
 
-        document.getElementById("teamCount").innerText =
-        data.standings.length;
+        "<br><br>Teams In Group: " +
+        data.standings.length +
 
-        document.getElementById("fixtureCount").innerText =
+        "<br><br>Upcoming Matches: " +
         data.fixtures.length;
 
     }
     catch(error){
 
-        console.log(error);
+        console.error(error);
+
+        document.getElementById("events").innerHTML =
+        "<div class='error'>" +
+        error +
+        "</div>";
 
     }
 
