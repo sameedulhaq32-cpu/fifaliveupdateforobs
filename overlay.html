@@ -2,38 +2,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>API Debug Overlay</title>
-
-<style>
-
-body{
-    background:#111;
-    color:#fff;
-    font-family:Arial, sans-serif;
-    margin:0;
-    padding:20px;
-}
-
-h1{
-    color:#ffd700;
-}
-
-pre{
-    background:#222;
-    border:1px solid #444;
-    padding:20px;
-    border-radius:8px;
-    white-space:pre-wrap;
-    word-wrap:break-word;
-}
-
-</style>
-
+<title>Debug</title>
 </head>
-
 <body>
 
-<h1>API Debug Output</h1>
+<h1>API Test</h1>
 
 <pre id="output">Loading...</pre>
 
@@ -42,33 +15,24 @@ pre{
 const api =
 "https://script.google.com/macros/s/AKfycbx2r3-vOT27XKSLOM7JAEJ05fc2YgpTsO5MFqgu0CZluR0a_dkrHxp7VtK5aGlBc2bQdw/exec";
 
-async function loadData(){
+fetch(api)
+.then(response => response.json())
+.then(data => {
 
-    try{
+    console.log(data);
 
-        const response = await fetch(api);
+    document.getElementById("output").textContent =
+        JSON.stringify(data,null,2);
 
-        const data = await response.json();
+})
+.catch(error => {
 
-        console.log("FULL API RESPONSE:");
-        console.log(data);
+    console.error(error);
 
-        document.getElementById("output").textContent =
-            JSON.stringify(data, null, 2);
+    document.getElementById("output").textContent =
+        error;
 
-    }
-    catch(error){
-
-        console.error(error);
-
-        document.getElementById("output").textContent =
-            "ERROR:\n\n" + error;
-
-    }
-
-}
-
-loadData();
+});
 
 </script>
 
