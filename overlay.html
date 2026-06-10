@@ -1,17 +1,23 @@
 <!DOCTYPE html>
+
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Live Football Overlay</title>
+<title>FIFA Live Overlay</title>
 
 <style>
 
 body{
     background:#111;
-    color:white;
+    color:#fff;
     font-family:Arial, sans-serif;
     margin:0;
     padding:20px;
+}
+
+#container{
+    max-width:1200px;
+    margin:auto;
 }
 
 #scoreboard{
@@ -19,31 +25,42 @@ body{
     justify-content:center;
     align-items:center;
     gap:40px;
-    font-size:50px;
+    font-size:60px;
     font-weight:bold;
 }
 
 #minute{
     text-align:center;
     color:yellow;
-    font-size:28px;
-    margin-top:10px;
+    font-size:32px;
+    margin-top:15px;
+    margin-bottom:30px;
 }
 
-#events{
-    margin-top:30px;
+#eventsPanel{
     border:1px solid #444;
-    padding:20px;
     border-radius:10px;
+    padding:20px;
+    background:#1a1a1a;
+}
+
+#eventsPanel h2{
+    margin-top:0;
+    color:#ffd700;
 }
 
 .event{
-    margin:8px 0;
+    padding:10px 0;
+    border-bottom:1px solid #333;
     font-size:22px;
 }
 
-h2{
-    margin-top:0;
+.event:last-child{
+    border-bottom:none;
+}
+
+.loading{
+    color:#999;
 }
 
 </style>
@@ -52,6 +69,9 @@ h2{
 
 <body>
 
+<div id="container">
+
+```
 <div id="scoreboard">
 
     <div id="home">Loading...</div>
@@ -64,22 +84,27 @@ h2{
 
 <div id="minute">0'</div>
 
-<div id="events">
+<div id="eventsPanel">
 
     <h2>Live Events</h2>
 
-    <div id="eventList"></div>
+    <div id="eventList" class="loading">
+        Waiting for events...
+    </div>
+
+</div>
+```
 
 </div>
 
 <script>
 
-// REPLACE THIS WITH YOUR APPS SCRIPT URL
-const api = "https://script.google.com/macros/s/AKfycbx2r3-vOT27XKSLOM7JAEJ05fc2YgpTsO5MFqgu0CZluR0a_dkrHxp7VtK5aGlBc2bQdw/exec";
+const api =
+"https://script.google.com/macros/s/AKfycbyLDs1NNAOLTtNh68pIcV7KKXoKMOrEPdf3nhxykr5UQkDPsphCevRdq90QODz-JdNwUQ/exec";
 
-async function loadData() {
+async function loadData(){
 
-    try {
+    try{
 
         const response = await fetch(api);
         const data = await response.json();
@@ -98,26 +123,39 @@ async function loadData() {
         document.getElementById("minute").innerText =
             data.scoreboard.minute + "'";
 
-        let eventsHtml = "";
+        let html = "";
 
-        data.events.forEach(function(event){
+        if(data.events && data.events.length > 0){
 
-            eventsHtml +=
+            for(let i = 0; i < data.events.length; i++){
+
+                html +=
                 "<div class='event'>" +
-                event[0] +
-                "' - " +
-                event[1] +
+                "<strong>" +
+                data.events[i][0] +
+                "'</strong> - " +
+                data.events[i][1] +
                 "</div>";
 
-        });
+            }
+
+        }else{
+
+            html =
+            "<div class='event'>No events available</div>";
+
+        }
 
         document.getElementById("eventList").innerHTML =
-            eventsHtml;
+            html;
 
     }
     catch(error){
 
         console.log(error);
+
+        document.getElementById("eventList").innerHTML =
+            "<div class='event'>Failed to load data</div>";
 
     }
 
@@ -125,7 +163,7 @@ async function loadData() {
 
 loadData();
 
-setInterval(loadData, 3000);
+setInterval(loadData,5000);
 
 </script>
 
