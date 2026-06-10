@@ -1,39 +1,21 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1 id="home">Loading...</h1>
+
 <script>
 
-async function loadData() {
+fetch('https://script.google.com/macros/s/AKfycbzWMqwQwO1tWV1412kjv4Tfwp3dPN--WDuYYTreBEXNGx1BfIcpecCPfFnStwmoghzCPQ/exec')
+.then(r => r.json())
+.then(data => {
 
-try {
-
-const response = await fetch(
-'https://script.google.com/macros/s/AKfycbzWMqwQwO1tWV1412kjv4Tfwp3dPN--WDuYYTreBEXNGx1BfIcpecCPfFnStwmoghzCPQ/exec'
-);
-
-const data = await response.json();
-
-console.log(data);
-
-document.getElementById("home").innerHTML =
+document.getElementById('home').innerHTML =
 data.homeTeam;
 
-document.getElementById("away").innerHTML =
-data.awayTeam;
-
-document.getElementById("score").innerHTML =
-data.homeScore + " - " + data.awayScore;
-
-document.getElementById("minute").innerHTML =
-data.minute + "'";
-
-}
-catch(error){
-
-console.log(error);
-
-}
-
-}
-
-loadData();
-setInterval(loadData,3000);
+});
 
 </script>
+
+</body>
+</html>
