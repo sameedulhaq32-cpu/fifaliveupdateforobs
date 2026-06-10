@@ -475,36 +475,51 @@ async function loadData(){
     }
 
 }
-const flags = {
+const flagMap = {
 
-    "Argentina":"🇦🇷",
-    "Brazil":"🇧🇷",
-    "Mexico":"🇲🇽",
-    "France":"🇫🇷",
-    "Germany":"🇩🇪",
-    "Spain":"🇪🇸",
-    "Portugal":"🇵🇹",
-    "England":"🏴",
-    "Netherlands":"🇳🇱",
-    "Belgium":"🇧🇪",
-    "Italy":"🇮🇹",
-    "Croatia":"🇭🇷",
-    "Uruguay":"🇺🇾",
-    "USA":"🇺🇸",
-    "Canada":"🇨🇦",
-    "Mexico":"🇲🇽",
-    "Japan":"🇯🇵",
-    "South Korea":"🇰🇷",
-    "Australia":"🇦🇺",
-    "Morocco":"🇲🇦",
-    "Saudi Arabia":"🇸🇦",
-    "Qatar":"🇶🇦",
-    "UAE":"🇦🇪",
-    "Pakistan":"🇵🇰",
-    "India":"🇮🇳"
+    "AR":"🇦🇷",
+    "BR":"🇧🇷",
+    "MX":"🇲🇽",
+    "DE":"🇩🇪",
+    "FR":"🇫🇷",
+    "ES":"🇪🇸",
+    "PT":"🇵🇹",
+    "IT":"🇮🇹",
+    "GB":"🏴",
+    "NL":"🇳🇱",
+    "BE":"🇧🇪",
+    "HR":"🇭🇷",
+    "US":"🇺🇸",
+    "CA":"🇨🇦",
+    "JP":"🇯🇵",
+    "KR":"🇰🇷",
+    "AU":"🇦🇺",
+    "MA":"🇲🇦",
+    "SA":"🇸🇦",
+    "AE":"🇦🇪",
+    "PK":"🇵🇰",
+    "IN":"🇮🇳"
 
 };
-loadData();
+
+const homeCode =
+data.teams[data.scoreboard.homeTeam];
+
+const awayCode =
+data.teams[data.scoreboard.awayTeam];
+
+const homeFlag =
+flagMap[homeCode] || "🏳️";
+
+const awayFlag =
+flagMap[awayCode] || "🏳️";
+
+document.getElementById("homeTeam").innerHTML =
+homeFlag + " " + data.scoreboard.homeTeam;
+
+document.getElementById("awayTeam").innerHTML =
+data.scoreboard.awayTeam + " " + awayFlag;
+    loadData();
 
 setInterval(loadData,2000);
 
