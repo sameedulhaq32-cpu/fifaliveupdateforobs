@@ -1,38 +1,257 @@
 <!DOCTYPE html>
+
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Debug</title>
+<title>FIFA Live Overlay</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#0a0a0a;
+    color:white;
+    font-family:Arial,sans-serif;
+    padding:20px;
+}
+
+/* SCOREBOARD */
+
+#scoreboard{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:40px;
+    font-size:60px;
+    font-weight:bold;
+    margin-top:20px;
+}
+
+#minute{
+    text-align:center;
+    color:#ffd700;
+    font-size:34px;
+    margin-top:15px;
+}
+
+/* MAIN LAYOUT */
+
+#main{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+    margin-top:40px;
+}
+
+/* PANELS */
+
+.panel{
+    background:#151515;
+    border:1px solid #333;
+    border-radius:12px;
+    padding:20px;
+}
+
+.panel-title{
+    color:#ffd700;
+    font-size:28px;
+    margin-bottom:15px;
+}
+
+.event{
+    padding:8px 0;
+    border-bottom:1px solid #222;
+    font-size:22px;
+}
+
+.event:last-child{
+    border-bottom:none;
+}
+
+/* STANDINGS PLACEHOLDER */
+
+.placeholder{
+    color:#999;
+    font-size:18px;
+}
+
+/* TICKER */
+
+#ticker{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:#111;
+    border-top:2px solid #ffd700;
+    overflow:hidden;
+    white-space:nowrap;
+    height:50px;
+    line-height:50px;
+}
+
+#tickerText{
+    display:inline-block;
+    padding-left:100%;
+    animation:ticker 20s linear infinite;
+    font-size:24px;
+}
+
+@keyframes ticker{
+
+    from{
+        transform:translateX(0);
+    }
+
+    to{
+        transform:translateX(-100%);
+    }
+
+}
+
+</style>
+
 </head>
+
 <body>
 
-<h1>API Test</h1>
+<div id="scoreboard">
 
-<pre id="output">Loading...</pre>
+```
+<div id="home">Loading...</div>
+
+<div id="score">0 - 0</div>
+
+<div id="away">Loading...</div>
+```
+
+</div>
+
+<div id="minute">0'</div>
+
+<div id="main">
+
+```
+<div class="panel">
+
+    <div class="panel-title">
+        Live Events
+    </div>
+
+    <div id="events">
+        Loading events...
+    </div>
+
+</div>
+
+<div class="panel">
+
+    <div class="panel-title">
+        Match Information
+    </div>
+
+    <div class="placeholder">
+
+        FIFA Live Coverage
+
+        <br><br>
+
+        Data Source:
+        Google Sheets
+
+        <br><br>
+
+        Auto Refresh:
+        5 Seconds
+
+    </div>
+
+</div>
+```
+
+</div>
+
+<div id="ticker">
+
+```
+<div id="tickerText">
+    FIFA LIVE • ARGENTINA vs BRAZIL • LIVE SCORE UPDATE • AUTO REFRESH ENABLED
+</div>
+```
+
+</div>
 
 <script>
 
 const api =
 "https://script.google.com/macros/s/AKfycbx2r3-vOT27XKSLOM7JAEJ05fc2YgpTsO5MFqgu0CZluR0a_dkrHxp7VtK5aGlBc2bQdw/exec";
 
-fetch(api)
-.then(response => response.json())
-.then(data => {
+async function loadData(){
 
-    console.log(data);
+    try{
 
-    document.getElementById("output").textContent =
-        JSON.stringify(data,null,2);
+        const response =
+        await fetch(api);
 
-})
-.catch(error => {
+        const data =
+        await response.json();
 
-    console.error(error);
+        document.getElementById("home").innerText =
+        data.scoreboard.homeTeam;
 
-    document.getElementById("output").textContent =
-        error;
+        document.getElementById("away").innerText =
+        data.scoreboard.awayTeam;
 
-});
+        document.getElementById("score").innerText =
+        data.scoreboard.homeScore
+        + " - " +
+        data.scoreboard.awayScore;
+
+        document.getElementById("minute").innerText =
+        data.scoreboard.minute + "'";
+
+        let eventsHtml = "";
+
+        for(let i=0;i<data.events.length;i++){
+
+            eventsHtml +=
+
+            "<div class='event'>"
+
+            + "<strong>"
+
+            + data.events[i][0]
+
+            + "'</strong> - "
+
+            + data.events[i][1]
+
+            + "</div>";
+
+        }
+
+        document.getElementById("events").innerHTML =
+        eventsHtml;
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+    }
+
+}
+
+loadData();
+
+setInterval(loadData,5000);
 
 </script>
 
