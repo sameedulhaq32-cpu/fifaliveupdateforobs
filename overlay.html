@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
 <head>
 <meta charset="UTF-8">
@@ -14,326 +15,232 @@
 
 body{
     background:#050505;
-    color:#ffffff;
+    color:#fff;
     font-family:Arial, Helvetica, sans-serif;
     overflow:hidden;
 }
 
-/* TOP BAR */
+/* TOP SCOREBOARD */
 
 #topBar{
-
     height:90px;
-
     display:flex;
-
     justify-content:center;
-
     align-items:center;
-
     gap:30px;
-
     border-bottom:2px solid #222;
-
     background:#0b0b0b;
-
 }
 
 .team{
-
     font-size:48px;
-
     font-weight:bold;
-
 }
 
 .score{
-
     font-size:64px;
-
     font-weight:bold;
-
-    color:#ffffff;
-
 }
 
 #minute{
-
     color:#ffd700;
-
-    font-size:32px;
-
+    font-size:34px;
+    font-weight:bold;
 }
 
-/* MAIN */
+/* MAIN GRID */
 
 #main{
-
-    height:calc(100vh - 140px);
-
+    height:calc(100vh - 130px);
     display:grid;
-
     grid-template-columns:50% 50%;
-
-    grid-template-rows:55% 45%;
-
+    grid-template-rows:50% 50%;
     gap:10px;
-
     padding:10px;
-
 }
 
 /* PANELS */
 
 .panel{
-
     background:#101010;
-
     border:1px solid #2a2a2a;
-
     border-radius:10px;
-
     overflow:hidden;
-
 }
 
 .panelTitle{
-
     background:#171717;
-
     color:#ffd700;
-
     padding:15px;
-
     font-size:28px;
-
     font-weight:bold;
-
 }
 
 .panelBody{
-
     height:calc(100% - 60px);
-
     overflow-y:auto;
-
     padding:10px;
-
 }
 
 /* EVENTS */
 
 .event{
-
     padding:12px;
-
     border-bottom:1px solid #222;
-
-    font-size:22px;
-
+    font-size:24px;
 }
 
-/* TABLE */
+/* TABLES */
 
 table{
-
     width:100%;
-
     border-collapse:collapse;
-
 }
 
 th{
-
-    background:#202020;
-
+    background:#222;
     color:#ffd700;
-
     padding:10px;
-
 }
 
 td{
-
     padding:10px;
-
     text-align:center;
-
     border-bottom:1px solid #222;
-
 }
 
 /* FIXTURES */
 
 .fixture{
-
     padding:14px;
-
     border-bottom:1px solid #222;
-
-    font-size:20px;
-
+    font-size:22px;
 }
 
 /* STATUS */
 
 #status{
-
-    padding:15px;
-
     font-size:24px;
-
-    line-height:1.8;
-
+    line-height:2;
 }
 
 /* TICKER */
 
 #ticker{
-
     position:fixed;
-
     bottom:0;
-
     left:0;
-
     width:100%;
-
     height:40px;
-
     background:#111;
-
     border-top:2px solid #ffd700;
-
     overflow:hidden;
-
 }
 
 #tickerText{
-
     position:absolute;
-
     white-space:nowrap;
-
     line-height:40px;
-
     font-size:20px;
-
     animation:tickerMove 25s linear infinite;
-
 }
 
 @keyframes tickerMove{
-
     from{
         transform:translateX(100%);
     }
-
     to{
         transform:translateX(-100%);
     }
-
 }
 
 .error{
-
-    color:#ff4444;
-
-    font-size:24px;
-
-    padding:20px;
-
+    color:red;
+    font-size:22px;
 }
 
 </style>
+
 </head>
 
 <body>
 
 <div id="topBar">
 
-    <div id="homeTeam" class="team">HOME</div>
+```
+<div id="homeTeam" class="team">HOME</div>
 
-    <div id="score" class="score">0 - 0</div>
+<div id="score" class="score">0 - 0</div>
 
-    <div id="awayTeam" class="team">AWAY</div>
+<div id="awayTeam" class="team">AWAY</div>
 
-    <div id="minute">0'</div>
+<div id="minute">0'</div>
+```
 
 </div>
 
 <div id="main">
 
-    <div class="panel">
+```
+<div class="panel">
 
-        <div class="panelTitle">
-            Live Events
-        </div>
+    <div class="panelTitle">
+        Live Events
+    </div>
 
-        <div class="panelBody" id="events">
+    <div class="panelBody" id="events">
+        Loading...
+    </div>
 
+</div>
+
+<div class="panel">
+
+    <div class="panelTitle">
+        Group Standings
+    </div>
+
+    <div class="panelBody">
+        <table id="standingsTable"></table>
+    </div>
+
+</div>
+
+<div class="panel">
+
+    <div class="panelTitle">
+        Upcoming Fixtures
+    </div>
+
+    <div class="panelBody" id="fixtures">
+        Loading...
+    </div>
+
+</div>
+
+<div class="panel">
+
+    <div class="panelTitle">
+        Tournament Overview
+    </div>
+
+    <div class="panelBody">
+
+        <div id="status">
             Loading...
-
-        </div>
-
-    </div>
-
-    <div class="panel">
-
-        <div class="panelTitle">
-            Group Standings
-        </div>
-
-        <div class="panelBody">
-
-            <table id="standingsTable"></table>
-
-        </div>
-
-    </div>
-
-    <div class="panel">
-
-        <div class="panelTitle">
-            Upcoming Fixtures
-        </div>
-
-        <div class="panelBody" id="fixtures">
-
-            Loading...
-
-        </div>
-
-    </div>
-
-    <div class="panel">
-
-        <div class="panelTitle">
-            Tournament Overview
-        </div>
-
-        <div class="panelBody">
-
-            <div id="status">
-
-                Loading...
-
-            </div>
-
         </div>
 
     </div>
 
 </div>
+```
+
+</div>
 
 <div id="ticker">
-
     <div id="tickerText">
-
         Loading...
-
     </div>
-
 </div>
 
 <script>
@@ -341,140 +248,6 @@ td{
 const api =
 "https://script.google.com/macros/s/AKfycbx2r3-vOT27XKSLOM7JAEJ05fc2YgpTsO5MFqgu0CZluR0a_dkrHxp7VtK5aGlBc2bQdw/exec";
 
-function formatDate(dateString){
-
-    try{
-
-        const d = new Date(dateString);
-
-        return d.toLocaleDateString(
-            "en-GB",
-            {
-                day:"2-digit",
-                month:"short",
-                year:"numeric"
-            }
-        );
-
-    }
-    catch(error){
-
-        return dateString;
-
-    }
-
-}
-
-async function loadData(){
-
-    try{
-
-        const response = await fetch(api);
-
-        const data = await response.json();
-
-        console.log("API DATA");
-        console.log(data);
-
-        document.getElementById("homeTeam").innerText =
-        data.scoreboard.homeTeam;
-
-        document.getElementById("awayTeam").innerText =
-        data.scoreboard.awayTeam;
-
-        document.getElementById("score").innerText =
-        data.scoreboard.homeScore +
-        " - " +
-        data.scoreboard.awayScore;
-
-        document.getElementById("minute").innerText =
-        data.scoreboard.minute + "'";
-
-        let eventsHTML = "";
-
-        for(let i=0;i<data.events.length;i++){
-
-            eventsHTML +=
-            "<div class='event'><strong>" +
-            data.events[i][0] +
-            "'</strong> - " +
-            data.events[i][1] +
-            "</div>";
-
-        }
-
-        document.getElementById("events").innerHTML =
-        eventsHTML;
-
-        let standingsHTML =
-        "<tr><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>PTS</th></tr>";
-
-        for(let s=0;s<data.standings.length;s++){
-
-            standingsHTML += "<tr>";
-
-            for(let c=0;c<data.standings[s].length;c++){
-
-                standingsHTML +=
-                "<td>" +
-                data.standings[s][c] +
-                "</td>";
-
-            }
-
-            standingsHTML += "</tr>";
-
-        }
-
-        document.getElementById("standingsTable").innerHTML =
-        standingsHTML;
-
-        let fixturesHTML = "";
-
-        for(let f=0;f<data.fixtures.length;f++){
-
-            fixturesHTML +=
-            "<div class='fixture'>" +
-            formatDate(data.fixtures[f][0]) +
-            " - " +
-            data.fixtures[f][1] +
-            "</div>";
-
-        }
-
-        document.getElementById("fixtures").innerHTML =
-        fixturesHTML;
-
-        document.getElementById("tickerText").innerText =
-        data.ticker.join("  •  ");
-
-        document.getElementById("status").innerHTML =
-
-        "Last Updated: " +
-        data.lastUpdated +
-
-        "<br><br>Total Events: " +
-        data.events.length +
-
-        "<br><br>Teams In Group: " +
-        data.standings.length +
-
-        "<br><br>Upcoming Matches: " +
-        data.fixtures.length;
-
-    }
-    catch(error){
-
-        console.error(error);
-
-        document.getElementById("events").innerHTML =
-        "<div class='error'>" +
-        error +
-        "</div>";
-
-    }
-
-}
 const flagMap = {
 
     "AR":"🇦🇷",
@@ -502,26 +275,144 @@ const flagMap = {
 
 };
 
-const homeCode =
-data.teams[data.scoreboard.homeTeam];
+function formatDate(dateString){
 
-const awayCode =
-data.teams[data.scoreboard.awayTeam];
+    try{
 
-const homeFlag =
-flagMap[homeCode] || "🏳️";
+        const d = new Date(dateString);
 
-const awayFlag =
-flagMap[awayCode] || "🏳️";
+        return d.toLocaleDateString(
+            "en-GB",
+            {
+                day:"2-digit",
+                month:"short",
+                year:"numeric"
+            }
+        );
 
-document.getElementById("homeTeam").innerHTML =
-homeFlag + " " + data.scoreboard.homeTeam;
+    }catch(e){
 
-document.getElementById("awayTeam").innerHTML =
-data.scoreboard.awayTeam + " " + awayFlag;
-    loadData();
+        return dateString;
 
-setInterval(loadData,2000);
+    }
+
+}
+
+async function loadData(){
+
+    try{
+
+        const response = await fetch(api);
+
+        const data = await response.json();
+
+        const homeCode =
+        data.teams?.[data.scoreboard.homeTeam];
+
+        const awayCode =
+        data.teams?.[data.scoreboard.awayTeam];
+
+        const homeFlag =
+        flagMap[homeCode] || "";
+
+        const awayFlag =
+        flagMap[awayCode] || "";
+
+        document.getElementById("homeTeam").innerHTML =
+        homeFlag + " " + data.scoreboard.homeTeam;
+
+        document.getElementById("awayTeam").innerHTML =
+        data.scoreboard.awayTeam + " " + awayFlag;
+
+        document.getElementById("score").innerText =
+        data.scoreboard.homeScore +
+        " - " +
+        data.scoreboard.awayScore;
+
+        document.getElementById("minute").innerText =
+        data.scoreboard.minute + "'";
+
+        let eventsHTML = "";
+
+        data.events.forEach(event => {
+
+            eventsHTML +=
+            "<div class='event'><strong>" +
+            event[0] +
+            "'</strong> - " +
+            event[1] +
+            "</div>";
+
+        });
+
+        document.getElementById("events").innerHTML =
+        eventsHTML;
+
+        let standingsHTML =
+        "<tr><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>PTS</th></tr>";
+
+        data.standings.forEach(row => {
+
+            standingsHTML += "<tr>";
+
+            row.forEach(col => {
+
+                standingsHTML +=
+                "<td>" + col + "</td>";
+
+            });
+
+            standingsHTML += "</tr>";
+
+        });
+
+        document.getElementById("standingsTable").innerHTML =
+        standingsHTML;
+
+        let fixturesHTML = "";
+
+        data.fixtures.forEach(fixture => {
+
+            fixturesHTML +=
+            "<div class='fixture'>" +
+            formatDate(fixture[0]) +
+            " - " +
+            fixture[1] +
+            "</div>";
+
+        });
+
+        document.getElementById("fixtures").innerHTML =
+        fixturesHTML;
+
+        document.getElementById("tickerText").innerText =
+        data.ticker.join("   •   ");
+
+        document.getElementById("status").innerHTML =
+
+        "Last Updated: " + data.lastUpdated +
+
+        "<br><br>Total Events: " + data.events.length +
+
+        "<br><br>Teams In Group: " + data.standings.length +
+
+        "<br><br>Upcoming Matches: " + data.fixtures.length;
+
+    }
+    catch(error){
+
+        document.getElementById("events").innerHTML =
+        "<div class='error'>" + error + "</div>";
+
+        console.error(error);
+
+    }
+
+}
+
+loadData();
+
+setInterval(loadData, 2000);
 
 </script>
 
