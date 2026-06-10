@@ -108,7 +108,8 @@ async function loadData(){
 
         const response = await fetch(api);
         const data = await response.json();
-
+console.log("FULL DATA");
+console.log(data);
         document.getElementById("home").innerText =
             data.scoreboard.homeTeam;
 
