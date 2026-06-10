@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIFA Live Broadcast Overlay</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+width:1920px;height:1080px;overflow:hidden;
+font-family:Segoe UI,Arial,sans-serif;
+background:linear-gradient(180deg,#050814,#0b1020);
+color:#fff;
+}
+:root{
+--gold:#FFD700;
+--glass:rgba(255,255,255,.08);
+--border:rgba(255,215,0,.25);
+}
+.panel{
+background:var(--glass);
+border:1px solid var(--border);
+backdrop-filter:blur(12px);
+border-radius:18px;
+box-shadow:0 0 20px rgba(0,0,0,.35);
+}
+#scoreboard{
+position:absolute;top:20px;left:50%;
+transform:translateX(-50%);
+width:1500px;height:110px;
+display:flex;align-items:center;justify-content:space-between;
+padding:0 30px;
+}
+.teamBox{display:flex;align-items:center;gap:14px;font-size:42px;font-weight:700;width:520px}
+.teamBox.right{justify-content:flex-end;text-align:right}
+.flag{font-size:52px}
+#score{font-size:72px;font-weight:900;color:var(--gold)}
+#minute{
+position:absolute;top:125px;left:50%;transform:translateX(-50%);
+font-size:34px;font-weight:800;color:var(--gold)
+}
+
+#eventsPanel{position:absolute;left:20px;top:180px;width:520px;height:560px}
+#standingsPanel{position:absolute;right:20px;top:180px;width:620px;height:560px}
+#fixturesPanel{position:absolute;left:20px;bottom:80px;width:800px;height:280px}
+#overviewPanel{position:absolute;right:20px;bottom:80px;width:760px;height:280px}
+
+.title{
+padding:16px 20px;
+font-size:26px;font-weight:800;color:var(--gold);
+border-bottom:1px solid var(--border)
+}
+.content{padding:15px;height:calc(100% - 60px);overflow:hidden}
+
+.event,.fixture{
+padding:12px;
+margin-bottom:8px;
+background:rgba(255,255,255,.04);
+border-radius:10px;
+font-size:22px
+}
+
+table{width:100%;border-collapse:collapse}
+th{
+background:rgba(255,215,0,.15);
+color:var(--gold);
+padding:10px
+}
+td{
+padding:10px;
+border-bottom:1px solid rgba(255,255,255,.08);
+text-align:center
+}
+
+#ticker{
+position:absolute;left:0;bottom:0;width:100%;height:55px;
+background:#0a0d16;border-top:2px solid var(--gold);
+overflow:hidden
+}
+#tickerText{
+position:absolute;
+white-space:nowrap;
+font-size:24px;
+line-height:55px;
+animation:scroll 30s linear infinite;
+}
+@keyframes scroll{
+from{transform:translateX(100%)}
+to{transform:translateX(-100%)}
+}
+.stat{font-size:24px;line-height:2}
+</style>
+</head>
+<body>
+
+<div id="scoreboard" class="panel">
+<div id="homeTeam" class="teamBox">HOME</div>
+<div id="score">0 - 0</div>
+<div id="awayTeam" class="teamBox right">AWAY</div>
+</div>
+
+<div id="minute">0'</div>
+
+<div id="eventsPanel" class="panel">
+<div class="title">LIVE EVENTS</div>
+<div id="events" class="content"></div>
+</div>
+
+<div id="standingsPanel" class="panel">
+<div class="title">GROUP STANDINGS</div>
+<div class="content"><table id="standingsTable"></table></div>
+</div>
+
+<div id="fixturesPanel" class="panel">
+<div class="title">UPCOMING FIXTURES</div>
+<div id="fixtures" class="content"></div>
+</div>
+
+<div id="overviewPanel" class="panel">
+<div class="title">TOURNAMENT OVERVIEW</div>
+<div id="status" class="content stat"></div>
+</div>
+
+<div id="ticker"><div id="tickerText">Loading...</div></div>
+
+<script>
+const api="https://script.google.com/macros/s/AKfycbx2r3-vOT27XKSLOM7JAEJ05fc2YgpTsO5MFqgu0CZluR0a_dkrHxp7VtK5aGlBc2bQdw/exec";
+
+function formatDate(d){
+try{
+return new Date(d).toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});
+}catch(e){return d;}
+}
+
+async function loadData(){
+try{
+const res=await fetch(api+"?t="+Date.now());
+const data=await res.json();
+
+const homeFlag=data.teams?.[data.scoreboard.homeTeam]||"";
+const awayFlag=data.teams?.[data.scoreboard.awayTeam]||"";
+
+document.getElementById("homeTeam").innerHTML=`<span class="flag">${homeFlag}</span><span>${data.scoreboard.homeTeam}</span>`;
+document.getElementById("awayTeam").innerHTML=`<span>${data.scoreboard.awayTeam}</span><span class="flag">${awayFlag}</span>`;
+
+document.getElementById("score").textContent=`${data.scoreboard.homeScore} - ${data.scoreboard.awayScore}`;
+document.getElementById("minute").textContent=`${data.scoreboard.minute}'`;
+
+document.getElementById("events").innerHTML=data.events.map(e=>
+`<div class="event"><b>${e[0]}'</b> • ${e[1]}</div>`).join("");
+
+let table='<tr><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>PTS</th></tr>';
+data.standings.forEach(r=>{
+table+=`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td></tr>`;
+});
+document.getElementById("standingsTable").innerHTML=table;
+
+document.getElementById("fixtures").innerHTML=data.fixtures.map(f=>
+`<div class="fixture">${formatDate(f[0])} — ${f[1]}</div>`).join("");
+
+document.getElementById("tickerText").textContent=data.ticker.join("   •   ");
+
+document.getElementById("status").innerHTML=`
+Last Updated: ${data.lastUpdated}<br>
+Total Events: ${data.events.length}<br>
+Teams In Group: ${data.standings.length}<br>
+Upcoming Matches: ${data.fixtures.length}<br>
+System Status: LIVE`;
+
+}catch(err){
+console.error(err);
+}
+}
+
+loadData();
+setInterval(loadData,2000);
+</script>
+</body>
+</html>
